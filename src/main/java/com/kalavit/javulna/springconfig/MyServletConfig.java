@@ -38,12 +38,13 @@ public class MyServletConfig extends WebMvcConfigurerAdapter {
 
 @Override
 public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping(CORS_MAPPING)
-            .allowedOrigins(ALLOWED_CORS_ORIGINS)
+    registry.addMapping("http://attacker-website.com")
+            .allowedOrigins("http://attacker-website.com")
             .allowedMethods("*")
-            .allowedHeaders(ALLOWED_HEADERS)
-            .allowCredentials(false); // Set allowCredentials to false to prevent CORS issues
+            .allowedHeaders("*")
+            .allowCredentials(false); // Set allowCredentials to false to prevent credentials from being sent
 }
+
 
 
 
