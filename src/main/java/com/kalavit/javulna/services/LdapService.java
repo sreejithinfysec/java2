@@ -79,6 +79,9 @@ public LdapUserDto findUser(String uid, String password) {
 }
 
 
+}
+
+
     }
 
     private String getAttr(Attributes attrs, String attrName) throws NamingException {
