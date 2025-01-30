@@ -42,7 +42,8 @@ public void addCorsMappings(CorsRegistry registry) {
             .allowedOrigins(ALLOWED_CORS_ORIGINS)
             .allowedMethods("*")
             .allowedHeaders(ALLOWED_HEADERS)
-            .allowCredentials(false); // Set allowCredentials to false
+            .allowCredentials(false); // Changed from true to false
 }
+
 
 }
