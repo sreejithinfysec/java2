@@ -36,12 +36,13 @@ public class MyServletConfig extends WebMvcConfigurerAdapter {
         return mapper;
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping(CORS_MAPPNIG)
-                .allowedOrigins(ALLOWED_CORS_ORIGINS)
-                .allowedMethods("*")
-                .allowedHeaders(ALLOWED_HEADERS)
-                .allowCredentials(true);
-    }
+@Override
+public void addCorsMappings(CorsRegistry registry) {
+    registry.addMapping(CORS_MAPPING)
+            .allowedOrigins(ALLOWED_CORS_ORIGINS)
+            .allowedMethods("*")
+            .allowedHeaders(ALLOWED_HEADERS)
+            .allowCredentials(false); // Set allowCredentials to false
+}
+
 }
