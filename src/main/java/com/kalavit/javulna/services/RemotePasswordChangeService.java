@@ -30,24 +30,25 @@ public class RemotePasswordChangeService {
     @Autowired
     private UserAutoDao uDao;
     
-    @Transactional
-    public boolean changePassword(String psChangeXml) {
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new InputSource(new StringReader(psChangeXml)));
-            String userName = doc.getElementsByTagName("userName").item(0).getFirstChild().getNodeValue();
-            String pwd = doc.getElementsByTagName("pwd").item(0).getFirstChild().getNodeValue();
-            LOG.debug("Will change the password of user: {} to {}", userName, pwd);
-            User u = uDao.findUserByName(userName);
-            if (u != null) {
-                u.setPassword(pwd);
-                return true;
-            }
-            return false;
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        } 
+@Transactional
+public boolean changePassword(String psChangeXml) {
+    try {
+        SAXBuilder sb = new SAXBuilder();
+        Document doc = sb.build(new StringReader(psChangeXml));
+        String userName = doc.getRootElement().getChildText("userName");
+        String pwd = doc.getRootElement().getChildText("pwd");
+        LOG.debug("Will change the password of user: {} to {}", userName, pwd);
+        User u = uDao.findUserByName(userName);
+        if (u != null) {
+            u.setPassword(pwd);
+            return true;
+        }
+        return false;
+    } catch (Exception ex) {
+        throw new RuntimeException(ex);
+    } 
+}
+
         
     }
     
