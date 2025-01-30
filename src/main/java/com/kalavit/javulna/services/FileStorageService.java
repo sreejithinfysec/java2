@@ -46,19 +46,26 @@ public class FileStorageService {
         }
     }
     
-    public Resource loadFileAsResource(String fileName) {
-        try {
-            Path filePath = Paths.get(fileStorageDir, fileName);
-            LOG.debug("gonna read file from {}" ,filePath.toString());
-            Resource resource = new UrlResource(filePath.toUri());
-            if(resource.exists()) {
-                return resource;
-            } else {
-                throw new RuntimeException("File not found " + fileName);
-            }
-        } catch (MalformedURLException ex) {
-            throw new RuntimeException("File not found " + fileName, ex);
+public Resource loadFileAsResource(String fileName) {
+    try {
+        // Validate file name to prevent path traversal attacks
+        if (fileName.contains("..")) {
+            throw new RuntimeException("Invalid file name: " + fileName);
         }
+
+        Path filePath = Paths.get(fileStorageDir, fileName);
+        LOG.debug("gonna read file from {}" ,filePath.toString());
+        Resource resource = new UrlResource(filePath.toUri());
+        if(resource.exists()) {
+            return resource;
+        } else {
+            throw new RuntimeException("File not found " + fileName);
+        }
+    } catch (MalformedURLException ex) {
+        throw new RuntimeException("File not found " + fileName, ex);
+    }
+}
+
     }
 
 }

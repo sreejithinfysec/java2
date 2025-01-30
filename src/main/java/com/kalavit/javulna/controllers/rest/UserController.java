@@ -30,17 +30,34 @@ public class UserController {
     @Autowired
     UserService userService;
     
-    @PostMapping("rest/user/password")
-    public String changePassword(@RequestParam String user, 
-            @RequestParam String oldPassword, 
-            @RequestParam String newPassword){
-        boolean changePassword = userService.changePassword(user, oldPassword, newPassword);
-        if(changePassword){
-            return "OK";
-        }
-        else{
-            return "Password not valid. Password did not change";
-        }
+@PostMapping("rest/user/password")
+public String changePassword(@RequestParam String user, 
+        @RequestParam String oldPassword, 
+        @RequestParam String newPassword){
+    boolean changePassword = userService.changePassword(user, oldPassword, newPassword);
+    if(changePassword){
+        return "OK";
+    }
+    else{
+        return "Password not valid. Password did not change";
+    }
+}
+
+        return "Password not valid. Password did not change";
+    }
+}
+
+    else{
+        return "Password not valid. Password did not change";
+    }
+}
+
+private String sanitizeInput(String input) {
+    // Implement input sanitization logic here
+    // For example, using regex or other techniques
+    return input.replaceAll("[^a-zA-Z0-9]", "");
+}
+
     }
     
     @PostMapping("rest/user")

@@ -73,20 +73,107 @@ public class UserService {
         }
     }
 
-    @Transactional
-    public boolean changePassword(String name, String oldPassword, String newPassword) {
-        User u = uDao.findUserByName(name);
-        if (u != null) {
-            if (u.getPassword().equals(oldPassword)) {
-                String pwdChangeXml = createXml(name, newPassword);
-                return passwordChangeService.changePassword(pwdChangeXml);
-            }
+@Transactional
+public boolean changePassword(String name, String oldPassword, String newPassword) {
+    User u = uDao.findUserByName(name);
+    if (u != null) {
+        if (u.getPassword().equals(oldPassword)) {
+            String pwdChangeXml = createXml(name, newPassword);
+            return passwordChangeService.changePassword(pwdChangeXml);
         }
+    }
+    return false;
+}
+
+    return false;
+}
+
+    }
+    return false;
+}
+
+    return false;
+}
+
         return false;
     }
 
-    private String createXml(String name, String newPassword) {
-        try {
+private String createXml(String name, String newPassword) {
+    try {
+        String xmlString = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("xml/PasswordChange.xml"), "UTF-8");
+        xmlString = xmlString.replaceAll("PWD_TO_REPLACE", newPassword);
+        xmlString = xmlString.replaceAll("USERNAME_TO_REPLACE", name);
+        LOG.debug("xml string created: {}", xmlString);
+        return xmlString;
+    } catch (IOException ex) {
+        throw new RuntimeException(ex);
+    }
+}
+
+        String xmlString = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("xml/PasswordChange.xml"), "UTF-8");
+        xmlString = xmlString.replaceAll("PWD_TO_REPLACE", newPassword);
+        xmlString = xmlString.replaceAll("USERNAME_TO_REPLACE", name);
+        LOG.debug("xml string created: {}", xmlString);
+        return xmlString;
+    } catch (IOException ex) {
+        throw new RuntimeException(ex);
+    }
+}
+
+        String xmlString = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("xml/PasswordChange.xml"), "UTF-8");
+        xmlString = xmlString.replaceAll("PWD_TO_REPLACE", newPassword);
+        xmlString = xmlString.replaceAll("USERNAME_TO_REPLACE", name);
+        LOG.debug("xml string created: {}", xmlString);
+        return xmlString;
+    } catch (IOException ex) {
+        throw new RuntimeException(ex);
+    }
+}
+
+        String xmlString = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("xml/PasswordChange.xml"), "UTF-8");
+        if (xmlString != null) {
+            xmlString = xmlString.replaceAll("PWD_TO_REPLACE", escapeXml(newPassword));
+            xmlString = xmlString.replaceAll("USERNAME_TO_REPLACE", escapeXml(name));
+            LOG.debug("xml string created: {}", xmlString);
+            return xmlString;
+        } else {
+            throw new IOException("XML file not found.");
+        }
+    } catch (IOException ex) {
+        throw new RuntimeException(ex);
+    }
+}
+
+private String escapeXml(String input) {
+    if (input == null) {
+        return "";
+    }
+    StringBuilder output = new StringBuilder();
+    for (int i = 0; i < input.length(); i++) {
+        char c = input.charAt(i);
+        switch (c) {
+            case '>':
+                output.append("&gt;");
+                break;
+            case '<':
+                output.append("&lt;");
+                break;
+            case '&':
+                output.append("&amp;");
+                break;
+            case '"':
+                output.append("&quot;");
+                break;
+            case '\'':
+                output.append("&apos;");
+                break;
+            default:
+                output.append(c);
+        }
+    }
+    return output.toString();
+}
+
             String xmlString = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("xml/PasswordChange.xml"), "UTF-8");
             xmlString = xmlString.replaceAll("PWD_TO_REPLACE", newPassword);
             xmlString = xmlString.replaceAll("USERNAME_TO_REPLACE", name);

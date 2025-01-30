@@ -36,28 +36,34 @@ public class ExtraAuthenticationCheckFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
     }
 
-    @Override
-    //Add another layer of security according to spec 4.5.6
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if (request instanceof HttpServletRequest) {
-            HttpServletRequest req = (HttpServletRequest) request;
-            Cookie[] cookies = req.getCookies();
-            if (cookies != null) {
-                for (Cookie cooky : cookies) {
-                    if (cooky.getName().equals(CustomAuthenticationSuccessHandler.USER_AUTHENTICATION_EXTRA_SECURITY)) {
-                        String value = cooky.getValue();
-                        Object principalFromCookie = SerializationUtil.readUserFromFile(Base64.getDecoder().decode(value));
-                        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-                        if (principal instanceof User && !principal.equals(principalFromCookie)) {
-                            LOG.error("something is wrong. Principal in cookie is not good. Possible secuirty failure!");
-                        } else {
-                            LOG.debug("the two principals are the same. Good.");
-                        }
+@Override
+public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    if (request instanceof HttpServletRequest) {
+        HttpServletRequest req = (HttpServletRequest) request;
+        Cookie[] cookies = req.getCookies();
+        if (cookies != null) {
+            for (Cookie cooky : cookies) {
+                if (cooky.getName().equals(CustomAuthenticationSuccessHandler.USER_AUTHENTICATION_EXTRA_SECURITY)) {
+                    String value = cooky.getValue();
+                    Object principalFromCookie = null;
+                    try {
+                        principalFromCookie = SerializationUtil.readUserFromFile(Base64.getDecoder().decode(value));
+                    } catch (IOException | ClassNotFoundException ex) {
+                        LOG.error("Error deserializing user from cookie: ", ex);
+                    }
+                    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                    if (principal instanceof User && principalFromCookie != null && !principal.equals(principalFromCookie)) {
+                        LOG.error("Something is wrong. Principal in cookie is not good. Possible security failure!");
+                    } else {
+                        LOG.debug("The two principals are the same. Good.");
                     }
                 }
             }
-
         }
+    }
+    chain.doFilter(request, response);
+}
+
         chain.doFilter(request, response);
     }
 
