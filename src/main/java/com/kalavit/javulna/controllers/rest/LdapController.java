@@ -25,11 +25,10 @@ public class LdapController {
 @GetMapping(path = "/rest/ldap")
 public LdapUserDto findUserInLDAP(
         @RequestParam(name = "username") String username,
-        @RequestParam(name = "password") String password) {
-    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    String encodedPassword = passwordEncoder.encode(password);
-    return ldapService.findUser(username, encodedPassword);
+        @RequestParam(name = "password") String pwd) {
+    return ldapService.findUser(username, pwd);
 }
+
 
 
 }
