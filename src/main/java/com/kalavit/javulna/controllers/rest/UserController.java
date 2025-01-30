@@ -34,12 +34,15 @@ public class UserController {
 public String changePassword(@RequestParam String user, 
         @RequestParam String oldPassword, 
         @RequestParam String newPassword){
-    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    boolean changePassword = userService.changePassword(user, passwordEncoder.encode(oldPassword), passwordEncoder.encode(newPassword));
+    boolean changePassword = userService.changePassword(user, oldPassword, newPassword);
     if(changePassword){
         return "OK";
     }
     else{
+        return "Password not valid. Password did not change";
+    }
+}
+
         return "Password not valid. Password did not change";
     }
 }
