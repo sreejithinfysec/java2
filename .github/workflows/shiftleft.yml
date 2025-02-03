@@ -27,7 +27,7 @@ jobs:
       run: |
         ${GITHUB_WORKSPACE}/sl --version
         ${GITHUB_WORKSPACE}/sl analyze --strict --wait \
-          --app java2 \
+          --app java2AI \
           --tag branch=${{ github.head_ref }} \
           $(pwd)
       env:
